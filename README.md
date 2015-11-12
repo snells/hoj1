@@ -1,6 +1,45 @@
 # hoj1
 
-Lisäys
+
+Main.java   
+parameters: server-address, server-port, port-that-we-listen   
+Handles udp call and starts tcp server.   
+
+
+Udp.java   
+Sends udp messages.   
+    Udp udp = new Udp();   
+    // parameters: server, port,  message   
+    udp.sendInt("www.server.zyx", 9898, 13);   
+    udp.close(); // not sure if needed   
+
+
+
+Tcp.java  
+Handles tcp connection.    
+Servers only one client at time.   
+   Tcp tcp = new Tcp();   
+   tcp.listen(1234);   
+   ...   
+   tcp.closeAll();   
+   
+
+Server.java   
+Handles the the task our server was supposed to do.   
+Only created from inside tcp class.   
+
+
+
+
+
+
+
+
+
+
+
+
+
 Deadline 30.11
 https://moodle.utu.fi/course/view.php?id=8337
 
