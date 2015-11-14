@@ -4,20 +4,18 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.nio.ByteBuffer;
 import java.io.IOException;
-import java.lang.Object.*;
 import hoj.Util;
 
 
 public class Udp {
-	private DatagramSocket socketOut; // used when sending
+	private DatagramSocket socketOut;
 	
 	public Udp() {
 			try {
 			socketOut = new DatagramSocket();
 			} catch (Exception e) {
-				System.out.println("Error creating socket");
+				System.out.println("UDP Error creating socket");
 				System.exit(1);
 		}
 	}
@@ -34,7 +32,7 @@ public class Udp {
 		try {
 			addr = InetAddress.getByName(address);
 		} catch(UnknownHostException e) {
-			System.out.println("Unkown host");
+			System.out.println("UDP Unkown host");
 			return false;
 		}
 		connectOut(addr, port);
@@ -43,7 +41,7 @@ public class Udp {
 		try {
 			socketOut.send(packet);
 		} catch(IOException e) {
-			System.out.println("Error sending data");
+			System.out.println("UDP Error sending data");
 			return false;
 		}
 		return true;
@@ -53,6 +51,7 @@ public class Udp {
 	
 	
 	public void close() {
-		socketOut.close();
+		if(!socketOut.isClosed())
+			socketOut.close();
 	}
 }

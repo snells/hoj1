@@ -7,26 +7,21 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 
-public class Server extends Thread {
-	private Socket client;
-	private InputStream strIn;
-	private OutputStream strOut;
-	private ObjectOutputStream out;
-	private ObjectInputStream in;
-	Tcp tcp;
-	public Server(Tcp t, Socket s){
-		client = s;
-		tcp = t;
-	}
-	public void closeAll() {
+public abstract class Server extends Thread {
+	protected Socket client;
+	protected InputStream strIn;
+	protected OutputStream strOut;
+	protected ObjectOutputStream out;
+	protected ObjectInputStream in;
+	protected boolean running = true; // set to false to finish serving
+	public Server() {}
+	public void close() {
 		try {
 		strIn.close();
 		strOut.close();
 		client.close();
 		} catch(Exception e) {
 		}
-		tcp.connected = false;
-		
 	}
 	@Override
 	public void run() {
@@ -36,19 +31,25 @@ public class Server extends Thread {
 			strOut = client.getOutputStream();
 			in = new ObjectInputStream(strIn);
 			out = new ObjectOutputStream(strOut);
-			try {
-				while(true) {
-					
+			while(running) {
+				try {
+					serve();
+				} catch(Exception e) {
+					System.out.println("SERVER Error while serving");
+					e.printStackTrace();
 				}
-			
-			} catch(Exception e) {
-				System.out.println("Error while serving");
-				closeAll();
 			}
 		} catch(IOException e) {
-			System.out.println("IO error");
-			closeAll();
+			System.out.println("SERVER IO error");
+			e.printStackTrace();
+			close();
 		}
-		closeAll();
+		close();
 	}
+	public void setClient(Socket s) {
+		client = s;
+	}
+	
+	protected abstract void serve();
 }
+

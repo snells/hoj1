@@ -16,19 +16,22 @@ Sends udp messages.
 ```
 
 
-Tcp.java  
-Handles tcp connection.    
-Servers only one client at time.   
-```
-   Tcp tcp = new Tcp();   
-   tcp.listen(1234);   
-   ...   
-   tcp.closeAll();   
-  ``` 
+Tcp.java   
+Creates one tcp session and serves the client. Then closes.   
+
 
 Server.java   
-Handles the the task our server was supposed to do.   
-Only created from inside tcp class.   
+Abstarct class for server implementation.   
+
+
+
+MainServer.java   
+The server X in the mentioned in the given task.   
+
+
+SumServer.java    
+Reads numbers from the in stream and closes when reads number 0.
+
 
 
 
