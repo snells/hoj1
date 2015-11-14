@@ -34,14 +34,18 @@ public class Tcp<T extends Server> extends Thread {
 			e.printStackTrace();
 			return;
 		}
+		
 		connected = true;
 		serv.setClient(cs);
 		serv.start();
 		System.out.println("Connection from " + cs.getInetAddress());
+		
+		while(serv.running) // waiting for session to end
+			;
+		connected = false;
 	}
 	public void close() {
 		connected = false;
-		serv.close();
 		if(!ss.isClosed())
 			try {
 				ss.close();

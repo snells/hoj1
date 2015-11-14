@@ -31,6 +31,7 @@ public abstract class Server extends Thread {
 			strOut = client.getOutputStream();
 			in = new ObjectInputStream(strIn);
 			out = new ObjectOutputStream(strOut);
+			servStart();
 			while(running) {
 				try {
 					serve();
@@ -50,6 +51,7 @@ public abstract class Server extends Thread {
 		client = s;
 	}
 	
+	protected void servStart() {}
 	protected abstract void serve();
 }
 

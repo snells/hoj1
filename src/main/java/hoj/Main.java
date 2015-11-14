@@ -20,6 +20,7 @@ public class Main {
 			SumServer ss = new SumServer();
 			sumTcp[i] = new Tcp<SumServer>(9901 + i, ss);
 		}
+		mainTcp.start();
 		Udp udp = new Udp();
 		Timer timer = new Timer();
 		udp.sendInt(address, port, listenPort);
@@ -28,16 +29,16 @@ public class Main {
 		
 		// sends the port we are listening to target server using udp protocol
 		// target server has 5 seconds to connect or we resend the port 
-		// we try i times
+		// we try 5 times
 		int i = 1;
-		while(i < 3) {
+		while(i < 5) {
 			if(mainTcp.connected)
 				break;
 			timer.update();
 			if(timer.getTime() > 5) {
 				timer.reset();
 				i++;
-				if(i == 3) // Don't send call if we are not going to listen
+				if(i == 5) // Don't send call if we are not going to listen
 					break;
 				udp.sendInt(address, port, listenPort);
 			}

@@ -19,11 +19,11 @@ public class Timer {
 		if(running) {
 			float tmp = System.currentTimeMillis();
 			time +=  tmp - oldTime;
+			oldTime = tmp;
 		}
 	}
 	public void reset() {
 		time = 0f;
-		running = false;
 		oldTime = System.currentTimeMillis();
 	}
 	

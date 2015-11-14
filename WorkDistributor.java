@@ -37,6 +37,7 @@ public class WorkDistributor {
 				int contactPort = -1;
 				try {
 					contactPort = Integer.parseInt(message.trim());
+					System.out.println("UDP package: " + contactPort);
 				} catch (NumberFormatException e) {
 					System.err
 							.println("UDP error, message should represent number, message = "

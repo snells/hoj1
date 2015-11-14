@@ -3,7 +3,7 @@
 
 Main.java   
 parameters: server-address, server-port, port-that-we-listen   
-Handles udp call and starts tcp server.   
+Handles udp call and starts tcp servers.   
 
 
 Udp.java   
