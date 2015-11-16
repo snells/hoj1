@@ -110,7 +110,10 @@ public abstract class Server extends Thread {
 	}
 		
 	protected void die() {
-		running = false;
+		if(running) {
+			running = false;
+			System.out.println("SERVER " + getServId() + " DIE");
+	}
 	}
 	protected void closeMsg() {
 		System.out.println("Closing server " + id);

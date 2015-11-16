@@ -5,7 +5,7 @@ import java.net.Socket;
 public class SumServer extends Server {
 	public volatile int[] locker;
 	int maxLen;
-	int i = 0;
+	volatile int i = 0;
 	int id;
 	public SumServer() {}
 	public SumServer(int index, int[] v) {
@@ -20,6 +20,7 @@ public class SumServer extends Server {
 		System.out.println("SumServer " + id + " read number: " + x);
 		if(x == 0) {
 			die();
+			return;
 		}
 		if(i == maxLen)
 			return;
@@ -45,7 +46,7 @@ public class SumServer extends Server {
 	}
 	@Override
 	protected void die() {
-		System.out.println("SERVER " + id + " DIE");
+		//System.out.println("SERVER " + id + " DIE");
 		super.die();
 	}
 	@Override

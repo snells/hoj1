@@ -76,6 +76,9 @@ public class MainServer extends Server {
 			System.out.println("Total sum " + sum);
 			write(sum);
 		}
+		
+		// Our indexing start at 0.
+		// Client servers indexing starts from 1
 		else if(x == 2) {
 			int sum = 0;
 			int servNum = 0;
@@ -86,8 +89,8 @@ public class MainServer extends Server {
 					 servNum = n;
 				 }
 			}
-			System.out.println("SumServer " + servNum + " has biggest sum");
-			write(servNum);
+			System.out.println("SumServer " + (servNum + 1) + " has biggest sum: " + sum);
+			write(servNum + 1);
 		}
 		else if(x == 3) {
 			int sum = 0;
