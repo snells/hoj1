@@ -37,8 +37,7 @@ public class Udp {
 		}
 		connectOut(addr, port);
 		byte[] msg = Util.toBytes(data);
-		Util.printBytes(msg);
-		System.out.println("Sending data " + data +" encoded into msg: " + msg);
+		System.out.println("Sending data " + data);
 		DatagramPacket packet = new DatagramPacket(msg, 4, addr, port);
 		try {
 			socketOut.send(packet);
@@ -48,8 +47,6 @@ public class Udp {
 		}
 		return true;
 	}
-	
-	
 	
 	
 	public void close() {

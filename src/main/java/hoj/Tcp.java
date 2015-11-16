@@ -10,10 +10,10 @@ import java.net.Socket;
 // For the given task this is enough 
 public class Tcp<T extends Server> extends Thread {
 	private int port;
-	public boolean connected = false;
-	ServerSocket ss;
-	Socket cs;
-	T serv;
+	private boolean connected = false;
+	private ServerSocket ss;
+	private Socket cs;
+	private T serv;
 	public Tcp(int p, T servClass) {
 		port = p;
 		serv = servClass;
@@ -40,19 +40,28 @@ public class Tcp<T extends Server> extends Thread {
 		serv.start();
 		System.out.println("Connection from " + cs.getInetAddress());
 		
-		while(serv.running) // waiting for session to end
+		while(serv.isRunning()) // waiting for session to end
 			;
 		connected = false;
+		System.out.println("TCP server on port " + port + " thread finished. Serv id " + serv.getServId());
+	}
+	
+	public boolean isConnected() {
+		return connected;
+	}
+	public T getServ() {
+		return serv;
 	}
 	public void close() {
 		connected = false;
+		if(serv != null)
+			serv.die();
 		if(!ss.isClosed())
 			try {
 				ss.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-		
 	}
 }
 
