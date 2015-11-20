@@ -15,27 +15,25 @@ public abstract class Server extends Thread {
 	protected OutputStream strOut;
 	protected ObjectOutputStream out;
 	protected ObjectInputStream in;
-	protected volatile boolean running = false; // set to false to finish serving
+	protected volatile boolean running = false; // set to false to kill the server
 	protected int id;
 	private boolean closed = false;
 	public Server() {
 		
 	}
 	public void close() {
-		if(!closed) { 
+		if(!closed) { // Server can receive multiple die calls from different reasons 
+					  // die needs to be processed only once
 			closed = true;
-			//System.out.println("Server " + getServId() + " Close function started");
-		running = false;
-		try {
-		//strIn.close();
-		//strOut.close();
-		client.close();
-		servClose();
-		} catch(Exception e) {
+			running = false;
+			try {
+				client.close();
+				servClose();
+			} catch(Exception e) {
+			}
 		}
-		//System.out.println("Server " + getServId() + " Close function finished");
-		}
-	}
+	}	
+	
 	public boolean isRunning() {
 		return running;
 	}
@@ -44,6 +42,8 @@ public abstract class Server extends Thread {
 		running = true;
 		super.start();
 	}
+	
+	
 	@Override
 	public void run() {
 		try {
@@ -56,13 +56,13 @@ public abstract class Server extends Thread {
 			while(running) {
 				try {
 					serve();
-				} catch(Exception e) {
+				} catch(Exception e) { // This should never actually catch because the serve method should handle every possible error case
 					System.out.println("SERVER Error while serving");
 					e.printStackTrace();
 					die();
 				}
 			}
-		} catch(IOException e) {
+		} catch(IOException e) { // if there was error creating streams
 			System.out.println("SERVER IO error");
 			e.printStackTrace();
 			die();
@@ -95,14 +95,13 @@ public abstract class Server extends Thread {
 				ret = in.readInt();
 			} catch(Exception e) {
 				System.out.println("SERVER " + getServId() + " ERROR read");
-			//e.printStackTrace();
-				die();
-				}
+				die();	
+				}	
 			return ret;
 		}
 		else {
 			die();
-			return -1;
+			return -1; // we need to return something but if we get to this point the read return value doesn't matter
 		}
 	}
 	protected int getServId() {

@@ -3,7 +3,7 @@ package hoj;
 
 // Timer runs in it's own threads so you need to call quit to finish it.
 public class Timer extends Thread {
-    private volatile long startTime;
+    private volatile long startTime; // needs to be volatile or else it will never finish?
     private volatile long time;
     private boolean running = true;
     private boolean quitFlag = false;

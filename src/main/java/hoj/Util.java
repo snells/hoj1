@@ -31,7 +31,7 @@ public class Util {
 	
 	// returns ret = int[2] array where ret[0] == 1 ? success : timed out 
 	// ret[1] is return value
-	public static int[] aread(ObjectInputStream in, int timeOut) {
+	public static int[] timedRead(ObjectInputStream in, int timeOut) {
 		int[] ret = new int[2];
 		Timer timer = new Timer();
 		Aread ar = new Aread(in);

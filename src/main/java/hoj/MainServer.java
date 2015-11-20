@@ -10,9 +10,9 @@ public class MainServer extends Server {
 	private int sumServCount;
 	private int sumServPort = 9901;
 	int sumMaxNumCount = 100;
-	int id = 0;
+	int id = 0; // there is only one instance of MainServer and it's id = 0, rest servers start indexing from 1
 	Tcp<SumServer>[] sumTcp;
-	volatile int[][] locker;
+	volatile int[][] locker; // place where the SumServers save values they receive, we don't actually use this for anything though
 
 	
 	public MainServer() {}
@@ -20,6 +20,8 @@ public class MainServer extends Server {
 		client = s;
 	}
 	
+	
+	// This method is executed last after we call close method defined in the super class Server
 	@Override
 	protected void servClose() {
 		for(Tcp<SumServer> p : sumTcp) {
@@ -31,6 +33,7 @@ public class MainServer extends Server {
 			}
 		}
 	}
+	// creates right amount of SumServers from the first value we received from server Y
 	@SuppressWarnings("unchecked")
 	private void sumServStart() {
 		locker = new int[sumServCount][sumMaxNumCount];
@@ -42,33 +45,54 @@ public class MainServer extends Server {
 			sumTcp[i].start();
 		}
 	}
+	
+	// this method is called on every iteration the server is running 
+	@Override
 	public void serve() {
+		
+		// this block gets the first value from the server
+		// if there is error or no response in 5 seconds we exit
 		if(!gotFirstNum) {
 			System.out.println("Trying to get first number");
-			int firstRet = read();
-			if(running == false) // error reading, server dies
+			int[] ret = Util.timedRead(in,  5); // tries to read for 5 seconds 
+			if(ret[0] == 0) { // read failed or timed out
+				die();
 				return;
+			}
+			int firstRet = ret[1]; // the read value
+			//if(running == false) // error reading, server dies
+				//return;
 			System.out.println("First number is " + firstRet);
 			gotFirstNum = true;
 			sumServCount = firstRet;
 			sumServStart();
 			for(int i = 0; i < sumServCount; i++) // sending sum server ports
 				write(i + sumServPort);
-			timer.start();
+			timer.start(); // timer needs to start be started only once
 		}
 		
-		if(timer.getTime() > 60) // no messages for minute so we die
+		if(timer.getTime() > 60) { // no messages for minute so we die
 			die();
+			return;
+		}
 		System.out.print("Server 0 Reading command: ... ");
 		int x = read();
-		if(running == false)
-			return;
+		if(running == false) // if read failed no point to continue  
+			return; 
 		System.out.println(x);
-		timer.reset();  
+		timer.reset();
+		
+		/*
+		 * x is the command we received from server Y
+		 * 0 means we need to shut down
+		 * 1 means send sum of all values received by the SumServers 
+		 * 2 means send SumServers number that has the biggest sum
+		 * 3 means send how many numbers in total the SumServers have received
+		 */
+		
 		
 		if(x == 0)
 			die();
-		
 		else if(x == 1) {
 			int sum = 0;
 			for(int n = 0; n < sumServCount; n++) 

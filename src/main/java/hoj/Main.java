@@ -33,13 +33,13 @@ public class Main {
 				udp.sendInt(address, port, listenPort);
 				resend = false;
 			}
+			// once the mainTcp is connected we can close udp
 			if(mainTcp.isConnected()) {
 				timer.quit();
 				break;
 			}
 			if(timer.getTime() >= 5) {
 				resend = true;
-				System.out.println("5 second loop");
 				timer.reset();
 				i++;
 			}

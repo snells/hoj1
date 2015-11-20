@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 
 // Asynchronous reading
-// One object can read only once
+// One instance of this object can read only once
 public class Aread extends Thread {
 	private boolean ready;
 	private volatile int ret;
