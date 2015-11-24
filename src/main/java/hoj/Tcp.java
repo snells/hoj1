@@ -38,7 +38,7 @@ public class Tcp<T extends Server> extends Thread {
 		while(server.isRunning()) // odottaa että serveri lopetaa
 			;
 		connected = false;
-		System.out.println("Tcp portilla " + port + " valmis, server id " + server.getServId());
+		System.out.println("Tcp portilla " + port + " valmis, server id " + server.getServerId());
 	}
 	
 	public boolean isConnected() {

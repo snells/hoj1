@@ -50,7 +50,7 @@ public class SumServer extends Server {
 		super.die();
 	}
 	@Override
-	protected int getServId() {
+	protected int getServerId() {
 		return id;
 	}
 }

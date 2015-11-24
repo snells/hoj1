@@ -128,7 +128,7 @@ public class MainServer extends Server {
 	
 	}
 	@Override
-	protected int getServId() {
+	protected int getServerId() {
 		return id;
 	}
 	

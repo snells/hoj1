@@ -37,6 +37,7 @@ public class Udp {
 		connect(target, port);
 		// paketti tavuiksi
 		byte[] message = Integer.toString(data).getBytes();
+		System.out.println("udp paketti osoitteeseen " address + " dada " data)
 		DatagramPacket packet = new DatagramPacket(message, 4, target, port);
 		try {
 			socket.send(packet);

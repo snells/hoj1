@@ -47,7 +47,7 @@ public abstract class Server extends Thread {
 	@Override
 	public void run() {
 		try {
-			System.out.println("Server " + getServId() + " Serving");
+			System.out.println("Server " + getServerId() + " Serving");
 			strIn = client.getInputStream();
 			strOut = client.getOutputStream();
 			in = new ObjectInputStream(strIn);
@@ -96,7 +96,7 @@ public abstract class Server extends Thread {
 			try {	
 				ret = in.readInt();
 			} catch(Exception e) {
-				System.out.println("SERVER " + getServId() + " ERROR read");
+				System.out.println("SERVER " + getServerId() + " ERROR read");
 				die();	
 				}	
 			return ret;
@@ -106,14 +106,14 @@ public abstract class Server extends Thread {
 			return -1; // we need to return something but if we get to this point the read return value doesn't matter
 		}
 	}
-	protected int getServId() {
+	protected int getServerId() {
 		return id;
 	}
 		
 	protected void die() {
 		if(running) {
 			running = false;
-			System.out.println("SERVER " + getServId() + " DIE");
+			System.out.println("SERVER " + getServerId() + " DIE");
 	}
 	}
 	protected void closeMsg() {
