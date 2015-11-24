@@ -5,129 +5,57 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 
-// Listens to port and starts one tcp connection
-// Should server handle multiple connections?
-// For the given task this is enough 
+/* kuuntelee porttia ja antaa Server luokan toteutuksen palvella asiakasta
+ */
 public class Tcp<T extends Server> extends Thread {
 	private int port;
 	private boolean connected = false;
-	private ServerSocket ss;
-	private Socket cs;
-	private T serv;
-	public Tcp(int p, T servClass) {
-		port = p;
-		serv = servClass;
+	private ServerSocket serverSocket;
+	private Socket socket;
+	private T server;
+	
+	public Tcp(int port, T server) {
+		this.port = port;
+		this.server = server;
 	}
+	
 	@Override 
 	public void run() {
+		// kuuntelee porttia ja lopettaa jos se ei onnistu
 		try {
-			ss = new ServerSocket(port);
-		} catch(IOException e) {
-			System.out.println("TCP ERROR cannot create socket");
-			e.printStackTrace();
-			return;
-		}
-		try {
-			cs = ss.accept();
+			serverSocket = new ServerSocket(port);
+			socket = serverSocket.accept();
 		} catch (IOException e) {
-			System.out.println("TCP ERROR io error");
 			e.printStackTrace();
 			return;
 		}
 		
 		connected = true;
-		serv.setClient(cs);
-		serv.start();
-		System.out.println("Connection from " + cs.getInetAddress());
+		server.setClient(socket);
+		server.start();
+		System.out.println("Palvelee asiakasta " + socket.getInetAddress());
 		
-		while(serv.isRunning()) // waiting for session to end
+		while(server.isRunning()) // odottaa että serveri lopetaa
 			;
 		connected = false;
-		System.out.println("TCP server on port " + port + " thread finished. Serv id " + serv.getServId());
+		System.out.println("Tcp portilla " + port + " valmis, server id " + server.getServId());
 	}
 	
 	public boolean isConnected() {
 		return connected;
 	}
-	public T getServ() {
-		return serv;
+	public T getServer() {
+		return server;
 	}
 	public void close() {
 		connected = false;
-		if(serv != null)
-			serv.die();
-		if(!ss.isClosed())
+		if(server != null)
+			server.die();
+		if(!serverSocket.isClosed())
 			try {
-				ss.close();
+				serverSocket.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 	}
 }
-
-
-
-
-
-
-/*
-public class Tcp extends Thread {
-	public boolean connected = false;
-	public boolean running = true;
-	MainServer serv;
-	ServerSocket ss;
-	ServerSocket[] sumServSockets;
-	public Tcp() {
-	}
-	
-	
-	private void startSumServers(int port, int x) {
-		sumServSockets = new ServerSocket[x];
-		for(int i = 0; i < x; i++)
-			sumSockets[i] = new SumServer()
-	}
-	public boolean listen(int port) {
-		try {
-		ss = new ServerSocket(port);
-		} catch(IOException e) {
-			System.out.println("Error creating socket");
-			return false;
-		}
-		Socket cs;
-		while(running) {
-			if(!connected) { // serving only one at time
-			try {
-				try {
-				cs = ss.accept();
-				cs.setSoTimeout(5000); // 5 sec timeout
-				System.out.println("Connection from " + cs.getInetAddress());
-				connected = true;
-				serv = new MainServer(cs);
-				serv.start();
-				} catch(SocketException e) { // catches timeout
-					System.out.println("Timeout");
-						serv.closeAll();
-						connected = false;
-				}
-			} catch(IOException e) {
-				System.out.println("Connection error");
-				serv.closeAll();
-				connected = false;
-				running = false;
-				return false;
-			}
-			
-		}
-		}
-		return true;
-	}
-	
-	public void closeAll() {
-		try {
-			ss.close();
-		} catch(IOException e) {
-			System.out.println("Error closing.\n wtf");
-		}
-	}
-}
-*/

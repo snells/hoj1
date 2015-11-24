@@ -96,7 +96,7 @@ public class MainServer extends Server {
 		else if(x == 1) {
 			int sum = 0;
 			for(int n = 0; n < sumServCount; n++) 
-				sum += sumTcp[n].getServ().getSum(); // we could just take the values from locker
+				sum += sumTcp[n].getServer().getSum(); // we could just take the values from locker
 			System.out.println("Total sum " + sum);
 			write(sum);
 		}
@@ -107,7 +107,7 @@ public class MainServer extends Server {
 			int sum = 0;
 			int servNum = 0;
 			for(int n = 0; n < sumServCount; n++) {
-				 int tmp = sumTcp[n].getServ().getSum();
+				 int tmp = sumTcp[n].getServer().getSum();
 				 if(tmp >= sum) {
 					 sum = tmp;
 					 servNum = n;
@@ -119,7 +119,7 @@ public class MainServer extends Server {
 		else if(x == 3) {
 			int sum = 0;
 			for(int n = 0; n < sumServCount; n++) 
-				sum += sumTcp[n].getServ().getNumCount();
+				sum += sumTcp[n].getServer().getNumCount();
 			System.out.println("Total number count " + sum);
 			write(sum);
 		}

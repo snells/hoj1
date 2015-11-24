@@ -7,6 +7,8 @@ public class Main {
 	// main starts the tcp session that will start MainServer
 	// When tcp connection is established main function is done
 	// Should main function be the last one to finish?
+	
+	// args = String[] { "server.address.com", "3621" , "portti jota kuunnellaan"
 	public static void main(String[] args) {
 		if(args.length < 3)
 			return;
@@ -16,9 +18,10 @@ public class Main {
 		
 		MainServer ms = new MainServer();
 		Tcp<MainServer> mainTcp = new Tcp<MainServer>(listenPort, ms);
-		
+		// starts to listen 
 		mainTcp.start();
 		
+		// start timer used for timing udp
 		Timer timer = new Timer();
 		timer.start();
 		
@@ -35,7 +38,7 @@ public class Main {
 			}
 			// once the mainTcp is connected we can close udp
 			if(mainTcp.isConnected()) {
-				timer.quit();
+				timer.quit(); // needs to close timers thread
 				break;
 			}
 			if(timer.getTime() >= 5) {
@@ -45,7 +48,7 @@ public class Main {
 			}
 		}
 		if(timer.isActive())
-			timer.quit();
+			timer.quit(); // if the connection is never established we need to close timers thread
 		udp.close();
 	}
 }

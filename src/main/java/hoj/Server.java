@@ -11,10 +11,10 @@ import java.net.Socket;
 // if reading fails Server closes
 public abstract class Server extends Thread {
 	protected Socket client;
-	protected InputStream strIn;
-	protected OutputStream strOut;
-	protected ObjectOutputStream out;
-	protected ObjectInputStream in;
+	private InputStream strIn;
+	private OutputStream strOut;
+	protected ObjectOutputStream out; // used for writing
+	protected ObjectInputStream in; // used for reading
 	protected volatile boolean running = false; // set to false to kill the server
 	protected int id;
 	private boolean closed = false;
@@ -73,6 +73,8 @@ public abstract class Server extends Thread {
 	public void setClient(Socket s) {
 		client = s;
 	}
+	
+	// if there is error while reading or writing server will shutdown
 	protected void write(int x) {
 		if(running) {
 			try {
@@ -117,8 +119,9 @@ public abstract class Server extends Thread {
 	protected void closeMsg() {
 		System.out.println("Closing server " + id);
 	}
-	protected void servStart() {}
-	protected void servClose() {}
-	protected abstract void serve();
+	// classes extending Server can overwrite these methods if necessary
+	protected void servStart() {} // runs once after initialization has been done
+	protected void servClose() {} // runs once after close method
+	protected abstract void serve(); // this method is looped while the server is running, handles all the serving
 }
 

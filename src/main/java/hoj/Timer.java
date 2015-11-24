@@ -27,6 +27,7 @@ public class Timer extends Thread {
 	    time = System.currentTimeMillis();
 	}
     }
+    // if the timer is running this reset() does not stop it 
     public void reset() {
 	startTime = System.currentTimeMillis();
 	time = startTime;

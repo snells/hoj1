@@ -9,40 +9,39 @@ import hoj.Util;
 
 
 public class Udp {
-	private DatagramSocket socketOut;
+	private DatagramSocket socket;
 	
 	public Udp() {
 			try {
-			socketOut = new DatagramSocket();
+			socket = new DatagramSocket();
 			} catch (Exception e) {
-				System.out.println("UDP Error creating socket");
-				System.exit(1);
+				e.printStackTrace();
 		}
 	}
 	
-	private void connectOut(InetAddress addr, int port) {
-		if(socketOut.isConnected())
-			socketOut.disconnect();
-		socketOut.connect(addr, port);	
+	private void connect(InetAddress address, int port) {
+		if(socket.isConnected())
+			socket.disconnect();
+		socket.connect(address, port);	
 	}
 		
-	// returns false if there was error
+	// true jos onnistui muuten false
 	public boolean sendInt(String address, int port, int data) {
-		InetAddress addr;
+		InetAddress target;
 		try {
-			addr = InetAddress.getByName(address);
+			target = InetAddress.getByName(address);
 		} catch(UnknownHostException e) {
-			System.out.println("UDP Unkown host");
+			e.printStackTrace();
 			return false;
 		}
-		connectOut(addr, port);
-		byte[] msg = Util.toBytes(data);
-		System.out.println("Sending data " + data);
-		DatagramPacket packet = new DatagramPacket(msg, 4, addr, port);
+		connect(target, port);
+		// paketti tavuiksi
+		byte[] message = Integer.toString(data).getBytes();
+		DatagramPacket packet = new DatagramPacket(message, 4, target, port);
 		try {
-			socketOut.send(packet);
+			socket.send(packet);
 		} catch(IOException e) {
-			System.out.println("UDP Error sending data");
+			e.printStackTrace();
 			return false;
 		}
 		return true;
@@ -50,7 +49,7 @@ public class Udp {
 	
 	
 	public void close() {
-		if(!socketOut.isClosed())
-			socketOut.close();
+		if(!socket.isClosed())
+			socket.close();
 	}
 }
