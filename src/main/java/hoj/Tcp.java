@@ -5,7 +5,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 
-/* kuuntelee porttia ja antaa Server luokan toteutuksen palvella asiakasta
+/* kuuntelee porttia ja antaa Server luokan toteutuksen palvella asiakasta.
  */
 public class Tcp<T extends Server> extends Thread {
 	private int port;
