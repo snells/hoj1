@@ -8,20 +8,20 @@ import java.net.Socket;
 /* kuuntelee porttia ja antaa Server luokan toteutuksen palvella asiakasta.
  */
 public class Tcp<T extends Server> extends Thread {
-	private int port;
-	private boolean connected = false;
-	private ServerSocket serverSocket;
+	private int port;					//portti jota kuuntelee
+	private boolean connected = false;	//yhteyden tila
+	private ServerSocket serverSocket;	
 	private Socket socket;
 	private T server;
 	
-	public Tcp(int port, T server) {
+	public Tcp(int port, T server) { //luodaan uusi Tcp-olio jolle annetaan haluttu portti ja server
 		this.port = port;
 		this.server = server;
 	}
 	
 	@Override 
 	public void run() {
-		// kuuntelee porttia ja lopettaa jos se ei onnistu
+		// kuuntelee annettua porttia ja lopettaa jos se ei onnistu
 		try {
 			serverSocket = new ServerSocket(port);
 			socket = serverSocket.accept();
@@ -31,11 +31,11 @@ public class Tcp<T extends Server> extends Thread {
 		}
 		
 		connected = true;
-		server.setClient(socket);
-		server.start();
-		System.out.println("Palvelee asiakasta " + socket.getInetAddress());
+		server.setClient(socket);	//tarvitsee soketin ett‰ pystyy kirjoittamaan ja lukemaan//
+		server.start();				//k‰ynnistet‰‰n serveri, serveri k‰y omassa threadissaan//
+		System.out.println("Palvelee asiakasta " + socket.getInetAddress()); //ja palvelee asiakasta//
 		
-		while(server.isRunning()) // odottaa ett√§ serveri lopetaa
+		while(server.isRunning()&&connected) //odottaa ett‰ serveri lopettaa palvelun//
 			;
 		connected = false;
 		System.out.println("Tcp portilla " + port + " valmis, server id " + server.getServerId());
