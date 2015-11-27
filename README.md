@@ -18,11 +18,23 @@ Sends udp messages.
 
 Tcp.java   
 Creates one tcp session and serves the client. Then closes.   
-
+```
+	Tcp(int port, Server serv)
+	void start() // starts to listen to the port
+	void close() // closes the connection and makes the thread tcp is running
+	boolean isConnected() // connection state
+	Server getServer()
+```
+	
 
 Server.java   
 Abstarct class for server implementation.   
-
+```
+	int getServerId() // id of the server
+	void start() // start to serve
+	void die() // closes the server
+	boolean isRunning() // if the server is serving
+```
 
 
 MainServer.java   
